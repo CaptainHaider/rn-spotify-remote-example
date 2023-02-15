@@ -11,6 +11,7 @@ import {
     ContentItem,
     SpotifyAuth
 } from 'react-native-spotify-remote';
+import {envVar} from './env';
 // import {
 //     SPOTIFY_CLIENT_ID,
 //     SPOTIFY_REDIRECT_URL,
@@ -139,11 +140,11 @@ class AppContextProvider extends React.Component<{}, AppContextState> {
 
     private async authenticate({ playURI, showDialog = false, authType }: AuthOptions = {}) {
         const config: ApiConfig = {
-            clientID: "8fc41cdb10d949b0b7c14d527dfacc3d",
-            redirectURL: 'republichot100-spotify-login://callback',
-            tokenSwapURL: `https://republic-api.dev.geno.me/api/v1/auth/spotify/access_token`,
-            tokenRefreshURL: `https://republic-api.dev.geno.me/api/v1/auth/spotify/refresh_token`,
-            scopes: [ApiScope.AppRemoteControlScope],
+            clientID: envVar.spotifyClientID,
+            redirectURL: envVar.spotifyCallbackURI,
+            tokenSwapURL: `${envVar.API_URL}/auth/spotify/access_token`,
+            tokenRefreshURL: `${envVar.API_URL}/auth/spotify/refresh_token`,
+            scopes: [ApiScope.AppRemoteControlScope, ApiScope.UserFollowReadScope],
             playURI,
             showDialog,
             authType
@@ -152,6 +153,7 @@ class AppContextProvider extends React.Component<{}, AppContextState> {
         try {
             // Go and check if things are connected
             const isConnected = await remote.isConnectedAsync()
+            console.log({isConnected})
             this.setState((state) => ({
                 ...state,
                 isConnected
@@ -159,6 +161,7 @@ class AppContextProvider extends React.Component<{}, AppContextState> {
 
             // Initialize the session
             const { accessToken: token } = await auth.authorize(config);
+            console.log('session',await auth.authorize(config))
             this.setState((state) => ({
                 ...state,
                 token
@@ -168,7 +171,6 @@ class AppContextProvider extends React.Component<{}, AppContextState> {
             this.onError(err);
         }
     }
-
     render() {
         const { children } = this.props
         return (

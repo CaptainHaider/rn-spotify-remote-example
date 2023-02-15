@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext ,useEffect} from 'react';
 import { View, SafeAreaView } from 'react-native';
 import { Text, Root, Tabs, Tab } from 'native-base';
 import AppContext, { AppContextProvider } from './AppContext';
@@ -14,6 +14,10 @@ import EnvVars from './Components/EnvVars';
 
 const AppLayout: React.SFC = () => {
   const { token, error, clearError } = useContext(AppContext);
+  
+  useEffect(() => {
+    console.log({token})
+  }, [token])
   return (
     <View style={styles.container} >
       {token ?

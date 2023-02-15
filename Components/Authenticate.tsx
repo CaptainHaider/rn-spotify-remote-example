@@ -1,4 +1,4 @@
-import React, { useState, useContext, useCallback } from 'react';
+import React, { useState, useContext, useCallback, useEffect } from 'react';
 import { View, Button, Text, Toast, Switch } from 'native-base';
 import styles from '../styles';
 import AppContext from '../AppContext';
@@ -6,7 +6,7 @@ import { Platform } from 'react-native';
 import { ApiConfig } from 'react-native-spotify-remote';
 
 const Authenticate: React.SFC = () => {
-    const { isConnected, token, onError, remote, authenticate } = useContext(AppContext)
+    const { isConnected, token, onError, remote, authenticate ,auth} = useContext(AppContext)
     const [showDialog, setShowDialog] = useState(false);
     const [autoConnect, setAutoConnect] = useState(true);
 
@@ -35,6 +35,13 @@ const Authenticate: React.SFC = () => {
             <Button onPress={() => handleConnect("")}>
                 <Text>Auth and Resume Playback</Text>
             </Button>
+            <Button onPress={() => auth.getSession().then((res)=>console.log(res))}>
+                <Text>GetSession</Text>
+            </Button>
+            <Button onPress={() => auth.requestAuthorization().then((res)=>console.log(res))}>
+                <Text>GetSession</Text>
+            </Button>
+
             {Platform.OS === "android" && (
                 <Button info onPress={() => handleConnect(undefined, "CODE")}>
                     <Text>Auth with CODE (android)</Text>
